@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Books Manager</title>
+  <!-- Materialize.CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Toastr CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="app">
+    <h1 class="center-align">{{title}}</h1>
+    <h4 class="center-align">Libri letti quest'anno: {{booksFinished}}</h4>
+
+    <div class="row">
+      <!-- FORM AGGIUNGI LIBRO -->
+      <div class="col s12 m4">
+        <form v-on:submit.prevent="addBook">
+          <div class="input-field col s12">
+            <input type="text" id="author" class="validate" v-model="newBook.author">
+            <label for="author">Autore</label>
+          </div>
+
+          <div class="input-field col s12">
+            <input type="text" id="title" class="validate" v-model="newBook.title">
+            <label for="title">Titolo</label>
+          </div>
+
+          <div class="input-field col s12">
+            <input type="number" id="year" class="validate" v-model="newBook.year">
+            <label for="year">Anno</label>
+          </div>
+
+          <a class="left waves-effect waves-light btn" v-on:click="changeTag">{{newBook.tag}}</a>
+
+          <input type="submit" class="right waves-effect waves-light btn lime darken-1" value="Aggiungi Libro">
+        </form>
+      </div><!-- /FORM AGGIUNGI LIBRO -->
+
+      <!-- TABLE -->
+      <div class="col s12 m8">
+        <table class="table-responsive">
+          <thead>
+            <tr>
+              <th></th>
+              <th v-on:click="sortTable('author')" v-bind:class="activeTableHeader('author')">Autore <i class="material-icons">arrow_drop_down</i></th>
+              <th v-on:click="sortTable('title')" v-bind:class="activeTableHeader('title')">Titolo <i class="material-icons">arrow_drop_down</i></th>
+              <th v-on:click="sortTable('year')" v-bind:class="activeTableHeader('year')">Anno <i class="material-icons">arrow_drop_down</i></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="book in books">
+              <td v-if="book.tag == 'Da leggere'"><i class="material-icons">bookmark</i></td>
+              <td v-else></td>
+              <td>{{book.author}}</td>
+              <td><a class="modal-trigger" href="#edit-modal" v-on:click="editBook = book">{{book.title}}</a></td>
+              <td>{{book.year}}</td>
+              <td>
+                <i v-if="book.tag == 'Già letto'" class="material-icons deep-orange-text text-darken-4" v-on:click="removeBook(book)">delete</i>
+                <i v-if="book.tag == 'Da leggere'" class="material-icons" v-on:click="bookCompleted(book)">check</i>
+              </td>
+            </tr>
+          </tbody>
+        </table><!-- /TABLE -->
+
+
+        <!-- EDIT MODAL -->
+        <div id="edit-modal" class="modal">
+          <div class="modal-content">
+            <h4>Modifica Libro</h4>
+
+            <form v-on:submit.prevent = "updateBook">
+              <div class="input-field col s12">
+                <input type="text" id="author" class="validate" :value="editBook.author" v-model="editBook.author">
+              </div>
+              <div class="input-field col s12">
+                <input type="text" id="title" class="validate" :value="editBook.title" v-model="editBook.title">
+              </div>
+              <div class="input-field col s12">
+                <input type="number" id="year" class="validate" :value="editBook.year" v-model="editBook.year">
+              </div>
+              <input type="submit" class="right waves-effect waves-light btn lime darken-1 modal-close" value="Aggiorna Libro">
+            </form>
+          </div>
+        </div><!-- /EDIT MODAL -->
+      </div>
+    </div>
+  </div>
+
+
+  <!-- jQuery -->
+  <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <!-- Toastr.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
+  <!-- Materialize.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>
+  <!-- Firebase.js -->
+  <script src="https://gstatic.com/firebasejs/4.0.0/firebase.js"></script>
+  <!-- VueJS -->
+  <script src="https://unpkg.com/vue"></script>
+  <!-- VueFire -->
+  <script src="https://unpkg.com/vuefire/dist/vuefire.js"></script>
+  <!-- App.js -->
+  <script src="app.js"></script>
+  <script>
+    $(document).ready(function(){
+      $('.modal').modal();
+    })
+  </script>
+
+</body>
+</html>

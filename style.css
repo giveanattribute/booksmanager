@@ -1,0 +1,18 @@
+i.material-icons:hover{
+  cursor: pointer;
+}
+tbody > tr:hover{
+  background-color: #a7ffeb;
+}
+td{
+  border-radius: 0;
+}
+th:hover{
+  cursor: pointer;
+}
+th > i.material-icons{
+  position: absolute;
+}
+th.active{
+  color: #01579b;
+}
